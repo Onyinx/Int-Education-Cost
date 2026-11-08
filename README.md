@@ -17,7 +17,7 @@ Can a non-technical user filter all of this by country, city, university, progra
 ---
 3. Data Sourcing
 Dataset: one table of 907 programme records with 14 columns (451 Master's, 297 Bachelor's and 159 PhD programmes).
-Source: [add where the dataset came from, e.g. the training provider or platform]
+Source: The dataset was gotten as a project for my internship.
 Currency: US dollars, with an exchange rate column for each country.
 Group	Columns
 Location and institution	`Country`, `City`, `University`
@@ -27,14 +27,13 @@ Cost-of-living and currency	`Living_Cost_Index` (a comparison score, not a dolla
 Derived totals	`Total_Study_Cost`, `Total_Cost(Local currency)`
 How I defined total cost: `Total_Study_Cost` = Tuition + Rent + Visa Fee + Insurance (all in USD). The Living Cost Index is kept as its own metric and is not added to the cost.
 ---
-4. Tool I Used and Why:
-I used Excel only, and I built the three analysis sheets myself on top of the data sheet.
-Sheet	What it does:
-International_Education_Costs	The source data: 907 rows, with the corrected total-cost formulas.
-Pivot_Table	15 linked PivotTables and 7 charts summarising cost and record counts by level, country, programme and university. The dashboard charts are built on the same data.
-Dash_board	The interactive dashboard: headline cards for the average tuition, living cost index, rent, visa fee, insurance and total cost, five slicers (Country, City, University, Level, Program) and six charts.
-Country_Summary	One row per country (71) showing the average total study cost and the number of programmes, using `AVERAGEIF` and `COUNTIF`. This answers the key question: which country is cheapest, all-in?.
-
+4. Tool I Used and Why
+I used Excel only, and I built the three analysis sheets myself on top of the data sheet:
+Sheet	What it does
+International_Education_Costs	The source data: 907 rows, with the corrected total-cost formulas
+Pivot_Table	15 linked PivotTables and 7 charts summarising cost and record counts by level, country, programme and university. The dashboard charts are built on the same data
+Dash_board	The interactive dashboard: headline cards for the average tuition, living cost index, rent, visa fee, insurance and total cost, five slicers (Country, City, University, Level, Program) and six charts
+Country_Summary	One row per country (71) showing the average total study cost and the number of programmes, using `AVERAGEIF` and `COUNTIF`. This answers the key question: which country is cheapest, all-in?
 Why Excel was the right and only tool:
 Every question is an aggregation. Totals and averages by country, level, university and programme are exactly what PivotTables do natively, with no code.
 One table, no joins. The data is a single clean table of 907 rows, so there was nothing for SQL to join, and no statistical testing or modelling that would call for Python.
@@ -100,4 +99,21 @@ Top 10 Countries by Study Cost and Bottom 20 Countries by Study Cost: total stud
 Pivot_Table sheet
 The 15 PivotTables and 7 charts behind the dashboard. They summarise tuition, rent, visa, insurance and record counts by level, country, programme and university.
 Country_Summary sheet
-One row for each of the 71 countries, with the average true total cost (USD) and the number of programmes. It answers "which country is cheapest, all-in?" directly, and averages ar
+One row for each of the 71 countries, with the average true total cost (USD) and the number of programmes. It answers "which country is cheapest, all-in?" directly, and averages are a fairer comparison than totals.
+---
+8. Recommendation
+Use the corrected `Total_Study_Cost` as the single source of truth for budgeting and country comparisons. It now reflects actual costs only.
+Keep the Living Cost Index as its own metric, and label it clearly as an index (for example "Cost-of-Living Index, baseline = 100") so it is never read as a dollar amount again.
+Use Country_Summary for "which country is cheapest, all-in" questions. Averages are the fair comparison, because totals mostly reflect how many programmes a country has in the dataset.
+Fix the text encoding of the 20 garbled city and university names by re-importing the source as UTF-8.
+Next improvement: adjust costs for programme duration (`Duration_Years`), since the current total adds tuition, rent, visa and insurance without scaling for how long the programme lasts.
+How to validate: click any cell in `Total_Study_Cost` and confirm the formula contains no Living Cost Index. Then use Data → Refresh All, and check that the Tehran row reads $3,830 and that total tuition is still 15,151,450.
+---
+9. Conclusions
+Where you study matters enormously. The average total cost ranges from $677 in Argentina to $51,261 in the USA, a gap of about 75 times.
+English-speaking destinations are the most expensive. The USA, Australia, Singapore, the UK and Canada occupy the top five by average cost, while several European and South American countries are far cheaper.
+Master's programmes are the cheapest level on average ($16,337), ahead of PhD ($19,012) and Bachelor's ($21,772).
+A hidden formula error changed every total. Treating a cost-of-living index as dollars overstated every programme, and the currency conversion mixed two currencies. Auditing the formulas, and not just the numbers on screen, caught it before it could mislead budgeting decisions.
+Limitation: the total cost is a comparison measure. It adds tuition, rent, visa and insurance without scaling by programme length, so a duration-adjusted version would be more precise for actual budgeting.
+---
+Prepared by Nwogbe Onyinyechi Victoria · Data Analyst
