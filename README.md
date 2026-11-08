@@ -17,7 +17,7 @@ Can a non-technical user filter all of this by country, city, university, progra
 ---
 3. Data Sourcing
 Dataset: one table of 907 programme records with 14 columns (451 Master's, 297 Bachelor's and 159 PhD programmes).
-Source: The dataset was gotten as a project for my internship.
+Source: [add where the dataset came from, e.g. the training provider or platform]
 Currency: US dollars, with an exchange rate column for each country.
 Group	Columns
 Location and institution	`Country`, `City`, `University`
@@ -54,6 +54,9 @@ Rewrote `Total_Study_Cost` as Tuition + Rent + Visa Fee + Insurance.
 Rewrote `Total_Cost(Local currency)` as (Tuition + Rent + Visa Fee + Insurance) × Exchange Rate, so every component is converted together.
 Refreshed the PivotTables and charts. Those built on the individual cost columns were unaffected, and only the one summarising the total needed refreshing.
 Added the Country_Summary sheet so the all-in cost by country has a direct answer.
+The cleaned data sheet after the fix:
+![Cleaned data sheet with the corrected total-cost columns](images/data_cleaning.png)
+In the screenshot, `Total_Study_Cost` (last column) now equals Tuition + Rent + Visa Fee + Insurance. For example, the first row is $55,400 + $2,200 + $160 + $1,500 = $59,260. `Living_Cost_Index` sits in its own column and is no longer part of the total.
 Other data issues noted:
 Garbled text: 20 records have garbled accented characters in city or university names, for example "Ã‰cole Polytechnique" (should be École Polytechnique), "TromsÃ¸" (Tromsø) and "Ã…s" (Ås). This is a text-encoding problem from how the file was saved. The names are still readable and don't affect any totals, but the fix is to re-save or import the source as UTF-8.
 Zero tuition: 103 programmes have $0 tuition (mostly in countries such as Germany, Greece and Denmark). I kept them, since they appear to be genuine tuition-free places.
